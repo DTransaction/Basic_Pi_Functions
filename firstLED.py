@@ -1,13 +1,15 @@
 import RPi.GPIO as GPIO
 import time
 
+pins = [16]
+pauseTime = 0.5
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18,GPIO.OUT)
+GPIO.setup(pins[0],GPIO.OUT)
 
 for x in range(20):
 	print("LED on")
-	GPIO.output(18,GPIO.HIGH)
-	time.sleep(0.03)
+	GPIO.output(pins[0],GPIO.HIGH)
+	time.sleep(pauseTime)
 	print("LED off")
-	GPIO.output(18,GPIO.LOW)
-	time.sleep(0.03)
+	GPIO.output(pins[0],GPIO.LOW)
+	time.sleep(pauseTime)
