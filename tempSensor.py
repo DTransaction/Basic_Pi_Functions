@@ -17,6 +17,8 @@ os.system('modprobe w1-therm')
 base_dir = '/sys/bus/w1/devices/'
 device_path = glob.glob(base_dir + '28*')[0] # Get file path of sensor
 
+
+
 # Function definitions
 def ledON():
     GPIO.output(pins[0], GPIO.HIGH)
@@ -24,10 +26,13 @@ def ledON():
 def ledOFF():
     GPIO.output(pins[0], GPIO.LOW)
 
-try:
+
+
+# Main script
+try: # Allows user to CTRL+C out of the program and properly clean up GPIO pin
     while True:
         with open(device_path + '/w1_slave', 'r') as f:
-            temp = int((str(f.readlines()))[76:81])/1000
+            temp = int((str(f.readlines()))[76:81])/1000 # Extracts the temperature value 
         print(temp)
         if temp >= 20 and temp <= 25:
             ledON()
