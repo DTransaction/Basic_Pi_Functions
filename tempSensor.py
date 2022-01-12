@@ -10,6 +10,7 @@ import RPi.GPIO as GPIO
 pins = [16] # Initializes the GPIO pin of the LED
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(pins, GPIO.OUT)
+GPIO.setwarnings(False)
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
@@ -75,11 +76,18 @@ def findTempRange(range: list) -> None:
 coffee = [60, 70] # Constant temperature ranges
 tea = [55, 65]
 
-menuCommands = {1: repeatedGetTemp, 2: findTempRange(coffee), 3: findTempRange(tea), 4: findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])}
 menuPrompt = "1 - Constantly read temperature\n2 - Optimal temperature for coffee\n3 - Optimal temperature for tea\n4 - Set custom temperature ranges\nCTRL + C to quit any process\n> "
 
 try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
     user = int(input(menuPrompt))
-    command = menuCommands.get(user)
+    if user == 1: 
+        command = repeatedGetTemp()
+    elif user == 2: 
+        command = findTempRange(coffee)
+    elif user == 3: 
+        command = findTempRange(tea)
+    elif user == 4: 
+        command = findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])
+        
 except:
     GPIO.cleanup()
