@@ -61,6 +61,7 @@ def findTempRange(range: list) -> None:
             tempC = getTemp()
             print(tempC)
             if tempC >= lower and tempC <= upper:
+                print("READY")
                 ledOFF()
                 time.sleep(0.5)
                 ledON()
