@@ -60,13 +60,13 @@ def findTempRange(range: list) -> None:
         while True:
             tempC = getTemp()
             print(tempC)
-            if tempC >= lower and tempC <= upper:
+            while tempC >= lower and tempC <= upper:
                 print("READY")
                 ledOFF()
                 time.sleep(0.5)
                 ledON()
                 time.sleep(0.5)
-            elif tempC >= softLower and tempC <= softUpper:
+            if tempC >= softLower and tempC <= softUpper:
                 ledON()
                 print("ALMOST")
             elif GPIO.input(pins[0]) == 1:
@@ -95,4 +95,5 @@ try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
         elif user == 4: 
             command = findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])
 except:
+    ledOFF()
     GPIO.cleanup()
