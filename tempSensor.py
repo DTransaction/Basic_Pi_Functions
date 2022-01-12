@@ -61,11 +61,10 @@ def findTempRange(range: list) -> None:
             tempC = getTemp()
             print(tempC)
             if tempC >= lower and tempC <= upper:
-                for blinks in range(5):
-                    ledOFF()
-                    time.sleep(0.5)
-                    ledON()
-                    time.sleep(0.5)
+                ledOFF()
+                time.sleep(0.5)
+                ledON()
+                time.sleep(0.5)
             elif tempC >= softLower and tempC <= softUpper:
                 ledON()
                 print("ALMOST")
