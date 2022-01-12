@@ -42,10 +42,13 @@ def getTemp() -> int:
     return temp
 
 def repeatedGetTemp(): 
-    while True:
-        tempC = getTemp()
-        print(f"{tempC}C")
-        time.sleep(1) 
+    try:
+        while True:
+            tempC = getTemp()
+            print(f"{tempC} C")
+            time.sleep(1) 
+    except: 
+        None
 
 def findTempRange(range: list) -> None:
     """
@@ -53,26 +56,28 @@ def findTempRange(range: list) -> None:
     """
     lower, upper = range[0], range[1]
     softLower, softUpper = lower - 5, upper + 5
-    while True:
-        tempC = getTemp()
-        print(tempC)
-        if tempC >= lower and tempC <= upper:
-            for x in range(5):
-                ledOFF()
-                time.sleep(0.5)
+    try:
+        while True:
+            tempC = getTemp()
+            print(tempC)
+            if tempC >= lower and tempC <= upper:
+                for blinks in range(5):
+                    ledOFF()
+                    time.sleep(0.5)
+                    ledON()
+                    time.sleep(0.5)
+            elif tempC >= softLower and tempC <= softUpper:
                 ledON()
-                time.sleep(0.5)
-        elif tempC >= softLower and tempC <= softUpper:
-            ledON()
-            print("ALMOST")
-        elif GPIO.input(pins[0]) == 1:
-            ledOFF()
-        time.sleep(1)
+                print("ALMOST")
+            elif GPIO.input(pins[0]) == 1:
+                ledOFF()
+            time.sleep(1)
+    except: 
+        None
 
 
 
 # Main script
-
 coffee = [60, 70] # Constant temperature ranges
 tea = [55, 65]
 
