@@ -85,17 +85,17 @@ tea = [55, 65]
 
 menuPrompt = "1 - Constantly read temperature\n2 - Optimal temperature for coffee\n3 - Optimal temperature for tea\n4 - Set custom temperature ranges\nCTRL + C to quit any process\n> "
 
-try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
-    while True:
-        user = int(input(menuPrompt))
-        if user == 1: 
-            command = repeatedGetTemp()
-        elif user == 2: 
-            command = findTempRange(coffee)
-        elif user == 3: 
-            command = findTempRange(tea)
-        elif user == 4: 
-            command = findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])
-except:
-    ledOFF()
-    GPIO.cleanup()
+# try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
+while True:
+    user = int(input(menuPrompt))
+    if user == 1: 
+        command = repeatedGetTemp()
+    elif user == 2: 
+        command = findTempRange(coffee)
+    elif user == 3: 
+        command = findTempRange(tea)
+    elif user == 4: 
+        command = findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])
+# except:
+    # ledOFF()
+    # GPIO.cleanup()
