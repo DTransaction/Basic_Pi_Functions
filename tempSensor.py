@@ -57,6 +57,7 @@ def findTempRange(range: list) -> None:
     """
     lower, upper = range[0], range[1]
     softLower, softUpper = lower - 5, upper + 5
+    print(softLower, softUpper)
     # try:
     while True:
         tempC = getTemp()
