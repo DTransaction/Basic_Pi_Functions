@@ -61,7 +61,7 @@ def findTempRange(range: list) -> None:
     while True:
         tempC = getTemp()
         print(f"{tempC} C")
-        while tempC >= lower and tempC <= upper:
+        if tempC >= lower and tempC <= upper:
             print(f"{tempC} C\tREADY")
             for x in range(10):
                 ledON()
@@ -95,7 +95,7 @@ while True:
     elif user == 3: 
         command = findTempRange(tea)
     elif user == 4: 
-        command = findTempRange([int(input("Lower limit\n> ")), int(input("Upper limit\n> "))])
+        command = findTempRange([float(input("Lower limit\n> ")), float(input("Upper limit\n> "))])
 # except:
     # ledOFF()
     # GPIO.cleanup()
