@@ -43,12 +43,13 @@ def getTemp() -> int:
 
 def repeatedGetTemp(): 
     try:
+        ledON()
         while True:
             tempC = getTemp()
             print(f"{tempC} C")
             time.sleep(1) 
     except: 
-        None
+        ledOFF()
 
 def findTempRange(range: list) -> None:
     """
@@ -56,24 +57,25 @@ def findTempRange(range: list) -> None:
     """
     lower, upper = range[0], range[1]
     softLower, softUpper = lower - 5, upper + 5
-    try:
-        while True:
-            tempC = getTemp()
-            print(f"{tempC} C")
-            while tempC >= lower and tempC <= upper:
-                print(f"{tempC} C\tREADY")
-                ledOFF()
-                time.sleep(0.3)
+    # try:
+    while True:
+        tempC = getTemp()
+        print(f"{tempC} C")
+        while tempC >= lower and tempC <= upper:
+            print(f"{tempC} C\tREADY")
+            for x in range(10):
                 ledON()
                 time.sleep(0.3)
-            if tempC >= softLower and tempC <= softUpper:
-                ledON()
-                print(f"{tempC} C\tALMOST")
-            elif GPIO.input(pins[0]) == 1:
                 ledOFF()
-            time.sleep(1)
-    except: 
-        None
+                time.sleep(0.3)
+        if tempC >= softLower and tempC <= softUpper:
+            ledON()
+            print(f"{tempC} C\tALMOST")
+        elif GPIO.input(pins[0]) == 1:
+            ledOFF()
+        time.sleep(1)
+    # except: 
+        # ledOFF()
 
 
 
