@@ -63,12 +63,11 @@ def findTempRange(range: list) -> None:
         print(f"{tempC} C")
         if tempC >= lower and tempC <= upper:
             print(f"{tempC} C\tREADY")
-            for x in range(5):
-                print(x)
-                ledON()
-                time.sleep(0.3)
-                ledOFF()
-                time.sleep(0.3)
+            print(x)
+            ledON()
+            time.sleep(0.3)
+            ledOFF()
+            time.sleep(0.3)
         elif tempC >= softLower and tempC <= softUpper:
             ledON()
             print(f"{tempC} C\tALMOST")
