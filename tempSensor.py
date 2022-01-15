@@ -63,7 +63,6 @@ def findTempRange(range: list) -> None:
         print(f"{tempC} C")
         if tempC >= lower and tempC <= upper:
             print(f"{tempC} C\tREADY")
-            print(x)
             ledON()
             time.sleep(0.3)
             ledOFF()
