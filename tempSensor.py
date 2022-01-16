@@ -50,10 +50,9 @@ def find_temp_range(temp_range: list) -> None:
 
     while True:
         temp = get_temp()
-        print(f"{temp} C")
 
         if temp >= lower and temp <= upper:
-            print(f"{temp} C\tREADY")
+            print(f"{temp} C   READY")
             for x in range(10):
                 LED_on()
                 time.sleep(0.3)
@@ -63,6 +62,7 @@ def find_temp_range(temp_range: list) -> None:
             LED_on()
             print(f"{temp} C\tALMOST")
         elif GPIO.input(16) == 1:
+            print(temp)
             LED_off()
         time.sleep(1)
 
