@@ -40,17 +40,18 @@ def repeated_get_temp():
     except: 
         LED_off()
 
-def find_temp_range(range: list) -> None:
+def find_temp_range(temp_range: list) -> None:
     """
     Flashes LED when temperature gets between provided range (list with two int 
     elements), and is solid when within 5 degrees celcius of the limits
     """
-    lower, upper = range[0], range[1]
+    lower, upper = temp_range[0], temp_range[1]
     soft_lower, soft_upper = lower - 5, upper + 5
-    # try:
+
     while True:
         temp = get_temp()
         print(f"{temp} C")
+
         if temp >= lower and temp <= upper:
             print(f"{temp} C\tREADY")
             for x in range(10):
@@ -64,8 +65,6 @@ def find_temp_range(range: list) -> None:
         elif GPIO.input(16) == 1:
             LED_off()
         time.sleep(1)
-    # except: 
-        # LED_off()
 
 
 
@@ -73,11 +72,12 @@ def find_temp_range(range: list) -> None:
 COFFEE = [60, 70]  # Constant temperature ranges
 TEA = [55, 65]
 
-MENU_PROMPT = ("1 - Constantly read temperature\n"
-               "2 - Optimal temperature for coffee\n"
-               "3 - Optimal temperature for tea\n"
-               "4 - Set custom temperature ranges\n"
-               "CTRL + C to quit any process\n> ")
+MENU_PROMPT = (
+    "1 - Constantly read temperature\n"
+    "2 - Optimal temperature for coffee\n"
+    "3 - Optimal temperature for tea\n"
+    "4 - Set custom temperature ranges\n"
+    "CTRL + C to quit any process\n> ")
 
 # try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
 while True:
@@ -89,7 +89,12 @@ while True:
     elif user == 3: 
         command = find_temp_range(TEA)
     elif user == 4: 
-        command = find_temp_range([float(input("Lower limit\n> ")), float(input("Upper limit\n> "))])
+        command = find_temp_range(
+            [
+                float(input("Lower limit\n> ")), 
+                float(input("Upper limit\n> "))
+            ]
+        )
 # except:
     # LED_off()
     # GPIO.cleanup()
