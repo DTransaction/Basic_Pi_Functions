@@ -79,22 +79,22 @@ MENU_PROMPT = (
     "4 - Set custom temperature ranges\n"
     "CTRL + C to quit any process\n> ")
 
-# try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
-while True:
-    user = int(input(MENU_PROMPT))
-    if user == 1: 
-        command = repeated_get_temp()
-    elif user == 2: 
-        command = find_temp_range(COFFEE)
-    elif user == 3: 
-        command = find_temp_range(TEA)
-    elif user == 4: 
-        command = find_temp_range(
-            [
-                float(input("Lower limit\n> ")), 
-                float(input("Upper limit\n> "))
-            ]
-        )
-# except:
-    # LED_off()
-    # GPIO.cleanup()
+try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
+    while True:
+        user = int(input(MENU_PROMPT))
+        if user == 1: 
+            command = repeated_get_temp()
+        elif user == 2: 
+            command = find_temp_range(COFFEE)
+        elif user == 3: 
+            command = find_temp_range(TEA)
+        elif user == 4: 
+            command = find_temp_range(
+                [
+                 float(input("Lower limit\n> ")), 
+                 float(input("Upper limit\n> "))
+                ]
+            )
+except:
+    LED_off()
+    GPIO.cleanup()
