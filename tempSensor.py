@@ -71,13 +71,21 @@ def find_temp_range(temp_range: list) -> None:
             LED_off()
             time.sleep(2)
 
+def remove_folder_contents(FOLDER_PATH):
+    for file_name in os.listdir(FOLDER_PATH):
+        file_path = FOLDER_PATH + file_name
+        os.remove(file_path)
+
 def send_daily_cat_pic(): 
     sender_email = "dannypyth@gmail.com"
+    password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
     receiver_email = "danny613tran@gmail.com"
     subject = "Temperature in acceptable range!"
     URL = "https://catoftheday.com/"
-    storage_folder = "C:/Users/danne/Downloads/"
-
+    FOLDER_PATH = "/home/pi/Pictures/"
+    
+    remove_folder_contents(FOLDER_PATH)
+    
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, 'html.parser')
     images = soup.find_all('img')
@@ -86,15 +94,15 @@ def send_daily_cat_pic():
         links.append(image_tag['src'])
     image_URL = URL + links[14]
     file_name = str((image_URL.split("/"))[-1])
-    file_location = storage_folder + file_name
+    file_location = FOLDER_PATH + file_name
 
     request = requests.get(image_URL, stream=True)
     if request.status_code == 200:  #200 status code = OK
-        with open(file_location, 'wb') as f: 
+        with open(file_location, 'wb') as f:
             request.raw.decode_content = True
             shutil.copyfileobj(request.raw, f)
 
-    yag = yagmail.SMTP(sender_email)
+    yag = yagmail.SMTP(sender_email, password)
     yag.send(
         to=receiver_email,
         subject=subject,
@@ -105,7 +113,6 @@ def send_daily_cat_pic():
 # Main script
 COFFEE = [60, 70]  # Constant temperature ranges
 TEA = [55, 65]
-
 MENU_PROMPT = (
     "1 - Constantly read temperature\n"
     "2 - Optimal temperature for coffee\n"
