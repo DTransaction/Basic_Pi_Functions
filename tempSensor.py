@@ -3,7 +3,10 @@ import os
 import glob
 import time
 import RPi.GPIO as GPIO
-
+import yagmail
+from bs4 import BeautifulSoup
+import requests
+import shutil
 
 
 # General Setup
@@ -47,26 +50,57 @@ def find_temp_range(temp_range: list) -> None:
     """
     lower, upper = temp_range[0], temp_range[1]
     soft_lower, soft_upper = lower - 5, upper + 5
+    outside_range = True
 
-    while True:
+    while outside_range:
         temp = get_temp()
         if lower <= temp <= upper:
             print(f"{temp} C   READY")
-            for x in range(10):
+            outside_range = send_daily_cat_pic()
+            for x in range(20):
                 time.sleep(0.25)
                 LED_on()
                 time.sleep(0.25)
                 LED_off()
         elif temp >= soft_lower and temp <= soft_upper:
             LED_on()
-            print(f"{temp} C\tALMOST")
+            print(f"{temp} C   ALMOST")
             time.sleep(2)
         elif GPIO.input(16) == 1:
             print(temp)
             LED_off()
             time.sleep(2)
 
+def send_daily_cat_pic(): 
+    sender_email = "dannypyth@gmail.com"
+    receiver_email = "danny613tran@gmail.com"
+    subject = "Temperature in acceptable range!"
+    URL = "https://catoftheday.com/"
+    storage_folder = "C:/Users/danne/Downloads/"
 
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    images = soup.find_all('img')
+    links = []
+    for image_tag in images:
+        links.append(image_tag['src'])
+    image_URL = URL + links[14]
+    file_name = str((image_URL.split("/"))[-1])
+    file_location = storage_folder + file_name
+
+    request = requests.get(image_URL, stream=True)
+    if request.status_code == 200:  #200 status code = OK
+        with open(file_location, 'wb') as f: 
+            request.raw.decode_content = True
+            shutil.copyfileobj(request.raw, f)
+
+    yag = yagmail.SMTP(sender_email)
+    yag.send(
+        to=receiver_email,
+        subject=subject,
+        contents=yagmail.inline(file_location))
+    
+    return False
 
 # Main script
 COFFEE = [60, 70]  # Constant temperature ranges
