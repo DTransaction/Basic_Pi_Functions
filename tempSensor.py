@@ -57,7 +57,7 @@ def find_temp_range(temp_range: list) -> None:
         if lower <= temp <= upper:
             print(f"{temp} C   READY")
             outside_range = send_daily_cat_pic()
-            for x in range(20):
+            for x in range(50):
                 time.sleep(0.25)
                 LED_on()
                 time.sleep(0.25)
@@ -83,9 +83,7 @@ def send_daily_cat_pic():
     subject = "Temperature in acceptable range!"
     URL = "https://catoftheday.com/"
     FOLDER_PATH = "/home/pi/Pictures/"
-    
-    remove_folder_contents(FOLDER_PATH)
-    
+
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, 'html.parser')
     images = soup.find_all('img')
@@ -108,6 +106,8 @@ def send_daily_cat_pic():
         subject=subject,
         contents=yagmail.inline(file_location))
     
+    remove_folder_contents(FOLDER_PATH)
+
     return False
 
 # Main script
