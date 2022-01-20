@@ -71,11 +71,6 @@ def find_temp_range(temp_range: list) -> None:
             LED_off()
             time.sleep(2)
 
-def remove_folder_contents(FOLDER_PATH):
-    for file_name in os.listdir(FOLDER_PATH):
-        file_path = FOLDER_PATH + file_name
-        os.remove(file_path)
-
 def send_daily_cat_pic(): 
     sender_email = "dannypyth@gmail.com"
     password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
@@ -106,7 +101,9 @@ def send_daily_cat_pic():
         subject=subject,
         contents=yagmail.inline(file_location))
     
-    remove_folder_contents(FOLDER_PATH)
+    for file_name in os.listdir(FOLDER_PATH):
+        file_path = FOLDER_PATH + file_name
+        os.remove(file_path)
 
     return False
 
