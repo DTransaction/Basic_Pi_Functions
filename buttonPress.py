@@ -21,21 +21,18 @@ counter = 0
 complete = False
 
 while not complete: 
-    try:
-        while GPIO.input(pins[0]) == GPIO.HIGH:
-            LED_flash(1)
-            counter += 1
-        else:
-            start_time = time.time()
-            while GPIO.input(pins[0]) == GPIO.LOW:
-                end_time = time.time()
-                time_elapsed = end_time - start_time
-                if time_elapsed >= 5:
-                    LED_flash(counter)
-                    complete = True
+    while GPIO.input(pins[0]) == GPIO.HIGH:
+        LED_flash(1)
+        counter += 1
+    else:
+        start_time = time.time()
+        while GPIO.input(pins[0]) == GPIO.LOW:
+            end_time = time.time()
+            time_elapsed = end_time - start_time
+            if time_elapsed >= 5:
+                LED_flash(counter)
+                complete = True
             
 
-    except Exception as e:
-        print(e)
-        GPIO.cleanup() #cleansup all of the GPIO pins used within the script
-        print("Done") #informs the user the program is finished running
+GPIO.cleanup() #cleansup all of the GPIO pins used within the script
+print("Done") #informs the user the program is finished running
