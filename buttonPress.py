@@ -35,8 +35,7 @@ while not complete:
                     complete = True
             
 
-    except:
+    except Exception as e:
+        print(e)
         GPIO.cleanup() #cleansup all of the GPIO pins used within the script
         print("Done") #informs the user the program is finished running
-
-print(time.time())
