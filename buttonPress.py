@@ -21,11 +21,11 @@ counter = 0
 complete = False
 
 while not complete: 
-    while GPIO.input(pins[0]) == GPIO.HIGH:
+    while GPIO.input(pins[1]) == GPIO.HIGH:
         LED_flash(1)
         counter += 1
     start_time = time.time()
-    while GPIO.input(pins[0]) == GPIO.LOW:
+    while GPIO.input(pins[1]) == GPIO.LOW:
         end_time = time.time()
         time_elapsed = end_time - start_time
         if time_elapsed >= 3:
