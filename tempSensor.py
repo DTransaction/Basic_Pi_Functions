@@ -29,6 +29,13 @@ def LED_on(): GPIO.output(pins[0], GPIO.HIGH)
 
 def LED_off(): GPIO.output(pins[0], GPIO.LOW)
 
+def LED_flash(times: int):
+    for x in range(times):
+        GPIO.output(pins[1], GPIO.HIGH)
+        time.sleep(0.25)
+        GPIO.output(pins[1], GPIO.LOW)
+        time.sleep(0.25)
+
 def get_temp() -> int:
     with open(device_path + '/w1_slave', 'r') as f:
         temp = int((str(f.readlines()))[76:81])/1000
@@ -113,29 +120,25 @@ def find_temp_range(temp_range: list) -> None:
 # Main script
 COFFEE = [60, 70]  # Constant temperature ranges
 TEA = [55, 65]
-MENU_PROMPT = (
-    "1 - Constantly read temperature\n"
-    "2 - Optimal temperature for coffee\n"
-    "3 - Optimal temperature for tea\n"
-    "4 - Set custom temperature ranges\n"
-    "CTRL + C to quit any process\n> ")
 
-try: # Allows user to CTRL + C out of the program and properly clean up GPIO pin
-    while True:
-        user = int(input(MENU_PROMPT))
-        if user == 1: 
-            command = repeated_get_temp()
-        elif user == 2: 
-            command = find_temp_range(COFFEE)
-        elif user == 3: 
-            command = find_temp_range(TEA)
-        elif user == 4: 
-            command = find_temp_range(
-                [
-                 float(input("Lower limit\n> ")), 
-                 float(input("Upper limit\n> "))
-                ]
-            )
-except:
-    LED_off()
-    GPIO.cleanup()
+counter = 0
+complete = False
+began = False
+
+while not complete: 
+    while GPIO.input(pins[0]) == GPIO.HIGH:
+        LED_flash(1)
+        counter += 1
+        began = True
+    start_time = time.time()
+    while GPIO.input(pins[0]) == GPIO.LOW and began == True:
+        end_time = time.time()
+        time_elapsed = end_time - start_time
+        if time_elapsed >= 10:
+            complete = True
+            break
+        elif time_elapsed >= 3:
+            LED_flash(counter)
+
+GPIO.cleanup() #cleansup all of the GPIO pins used within the script
+print("Done") #informs the user the program is finished running
