@@ -42,11 +42,11 @@ def get_temp() -> int:
         temp = int((str(f.readlines()))[76:81])/1000
     return temp
 
-def send_daily_cat_pic(data: list) -> None: 
+def email_daily_cat_pic(data: list) -> None: 
     sender_email = "dannypyth@gmail.com"
     password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
     receiver_email = "danny613tran@gmail.com"
-    subject = f"Sensor in range! {data[0]} <= {data[2]} <= {data[1]}"
+    subject = f"Sensor is now {data[2]}\u2103, within ({data[0]}\u2103, {data[1]}\u2103)"
     URL = "https://catoftheday.com/"
     FOLDER_PATH = "/home/pi/Pictures/"
 
@@ -89,7 +89,7 @@ def find_temp_range(temp_range: list) -> None:
         temp = get_temp()
         if lower <= temp <= upper:
             print(f"{temp} C   READY")
-            send_daily_cat_pic(temp_range + [temp])
+            email_daily_cat_pic(temp_range + [temp])
             LED_flash(50, 0.25)
             inside_range = True
         elif temp >= soft_lower and temp <= soft_upper:
@@ -122,7 +122,7 @@ try:
                 end_time = time.time()
                 time_elapsed = end_time - start_time
                 if time_elapsed >= 10:
-                    print("Setting range in 30 seconds")
+                    print("Setting range in 30 seconds. Place temperature sensor in the stuff")
                     # time.sleep(30)
                     find_temp_range([counter * 10 - 3, counter * 10 + 3])
                     complete = True
