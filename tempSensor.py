@@ -30,12 +30,12 @@ def LED_on(): GPIO.output(pins[0], GPIO.HIGH)
 
 def LED_off(): GPIO.output(pins[0], GPIO.LOW)
 
-def LED_flash(times: int):
+def LED_flash(times: int, pause: float):
     for x in range(times):
         LED_on()
-        time.sleep(0.25)
+        time.sleep(pause)
         LED_off()
-        time.sleep(0.25)
+        time.sleep(pause)
 
 def get_temp() -> int:
     with open(device_path + '/w1_slave', 'r') as f:
@@ -86,8 +86,6 @@ def send_daily_cat_pic():
         file_path = FOLDER_PATH + file_name
         os.remove(file_path)
 
-    return True
-
 def find_temp_range(temp_range: list) -> None:
     """
     Flashes LED when temperature gets between provided range (list with two int 
@@ -101,17 +99,14 @@ def find_temp_range(temp_range: list) -> None:
         temp = get_temp()
         if lower <= temp <= upper:
             print(f"{temp} C   READY")
-            inside_range = send_daily_cat_pic()
-            for x in range(50):
-                time.sleep(0.25)
-                LED_on()
-                time.sleep(0.25)
-                LED_off()
+            send_daily_cat_pic()
+            LED_flash(50, 0.25)
+            inside_range = True
         elif temp >= soft_lower and temp <= soft_upper:
-            LED_on()
             print(f"{temp} C   ALMOST")
+            LED_on()
             time.sleep(2)
-        elif GPIO.input(16) == 1:
+        else:
             print(temp)
             LED_off()
             time.sleep(2)
@@ -119,37 +114,37 @@ def find_temp_range(temp_range: list) -> None:
 
 
 # Main script
-COFFEE = [60, 70]  # Constant temperature ranges
-TEA = [55, 65]
-
-counter = 0
-complete = False
-began = False
 
 
 print("Begin")
-
-while not complete: 
-    while GPIO.input(pins[1]) == GPIO.HIGH:
-        LED_flash(1)
-        counter += 1
-        began = True
-        print(counter)
-    start_time = time.time()
-    replay = True
-    while GPIO.input(pins[1]) == GPIO.LOW and began:
-        end_time = time.time()
-        time_elapsed = end_time - start_time
-        if time_elapsed >= 10:
-            print("Setting range in 30 seconds")
-            # time.sleep(30)
-            find_temp_range([counter * 10 - 3, counter * 10 + 3])
-            complete = True
-            break
-        elif time_elapsed >= 3 and replay:
-            print("Replaying")
-            LED_flash(counter)
-            replay = False
-
-GPIO.cleanup() #cleansup all of the GPIO pins used within the script
-print("Done") #informs the user the program is finished running
+try:
+    while True: 
+        complete = False
+        while not complete: 
+            began = False
+            counter = 0
+            while GPIO.input(pins[1]) == GPIO.HIGH:
+                began = True
+                counter += 1
+                print(counter)
+                LED_flash(1, 0.3)
+            start_time = time.time()
+            replay = True
+            while GPIO.input(pins[1]) == GPIO.LOW and began:
+                end_time = time.time()
+                time_elapsed = end_time - start_time
+                if time_elapsed >= 10:
+                    print("Setting range in 30 seconds")
+                    # time.sleep(30)
+                    find_temp_range([counter * 10 - 3, counter * 10 + 3])
+                    complete = True
+                    break
+                elif time_elapsed >= 3 and replay:
+                    print("Replaying")
+                    LED_flash(counter, 0.2)
+                    replay = False
+except Exception as e:
+    print(e)
+    LED_off
+    GPIO.cleanup()
+    print("Done")
