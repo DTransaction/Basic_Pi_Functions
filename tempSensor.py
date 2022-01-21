@@ -42,21 +42,11 @@ def get_temp() -> int:
         temp = int((str(f.readlines()))[76:81])/1000
     return temp
 
-def repeated_get_temp(): 
-    try:
-        LED_on()
-        while True:
-            temp = get_temp()
-            print(f"{temp} C")
-            time.sleep(1) 
-    except: 
-        LED_off()
-
-def send_daily_cat_pic(): 
+def send_daily_cat_pic(data: list) -> None: 
     sender_email = "dannypyth@gmail.com"
     password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
     receiver_email = "danny613tran@gmail.com"
-    subject = "Temperature in acceptable range!"
+    subject = f"Sensor in range! {data[0]} <= {data[2]} <= {data[1]}"
     URL = "https://catoftheday.com/"
     FOLDER_PATH = "/home/pi/Pictures/"
 
@@ -99,7 +89,7 @@ def find_temp_range(temp_range: list) -> None:
         temp = get_temp()
         if lower <= temp <= upper:
             print(f"{temp} C   READY")
-            send_daily_cat_pic()
+            send_daily_cat_pic(temp_range + [temp])
             LED_flash(50, 0.25)
             inside_range = True
         elif temp >= soft_lower and temp <= soft_upper:
@@ -114,8 +104,6 @@ def find_temp_range(temp_range: list) -> None:
 
 
 # Main script
-
-
 print("Begin")
 try:
     while True: 
