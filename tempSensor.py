@@ -126,6 +126,7 @@ counter = 0
 complete = False
 began = False
 
+
 print("Begin")
 
 while not complete: 
@@ -134,7 +135,8 @@ while not complete:
         counter += 1
         began = True
     start_time = time.time()
-    while GPIO.input(pins[1]) == GPIO.LOW and began == True:
+    replay = True
+    while GPIO.input(pins[1]) == GPIO.LOW and began:
         end_time = time.time()
         time_elapsed = end_time - start_time
         if time_elapsed >= 10:
@@ -142,8 +144,9 @@ while not complete:
             time.sleep(30)
             find_temp_range([counter * 10 - 3, counter * 10 + 3])
             break
-        elif time_elapsed >= 3:
+        elif time_elapsed >= 3 and replay:
             LED_flash(counter)
+            replay = False
 
 GPIO.cleanup() #cleansup all of the GPIO pins used within the script
 print("Done") #informs the user the program is finished running
