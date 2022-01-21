@@ -11,9 +11,10 @@ import shutil
 
 
 # General Setup
-pins = [16] # Initializes the GPIO pin of the LED
+pins = [16, 27] # Initializes the GPIO pin of the LED
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(pins, GPIO.OUT)
+GPIO.setup(pins[0], GPIO.OUT)
+GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setwarnings(False)
 
 os.system('modprobe w1-gpio')
@@ -125,6 +126,8 @@ counter = 0
 complete = False
 began = False
 
+print("Begin")
+
 while not complete: 
     while GPIO.input(pins[0]) == GPIO.HIGH:
         LED_flash(1)
@@ -136,6 +139,8 @@ while not complete:
         time_elapsed = end_time - start_time
         if time_elapsed >= 10:
             complete = True
+            time.sleep(30)
+            find_temp_range([counter * 10 - 3, counter * 10 + 3])
             break
         elif time_elapsed >= 3:
             LED_flash(counter)
