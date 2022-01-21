@@ -32,9 +32,9 @@ def LED_off(): GPIO.output(pins[0], GPIO.LOW)
 
 def LED_flash(times: int):
     for x in range(times):
-        GPIO.output(pins[1], GPIO.HIGH)
+        LED_on()
         time.sleep(0.25)
-        GPIO.output(pins[1], GPIO.LOW)
+        LED_off()
         time.sleep(0.25)
 
 def get_temp() -> int:
