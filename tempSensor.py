@@ -134,17 +134,20 @@ while not complete:
         LED_flash(1)
         counter += 1
         began = True
+        print(counter)
     start_time = time.time()
     replay = True
     while GPIO.input(pins[1]) == GPIO.LOW and began:
         end_time = time.time()
         time_elapsed = end_time - start_time
         if time_elapsed >= 10:
-            complete = True
-            time.sleep(30)
+            print("Setting range in 30 seconds")
+            # time.sleep(30)
             find_temp_range([counter * 10 - 3, counter * 10 + 3])
+            complete = True
             break
         elif time_elapsed >= 3 and replay:
+            print("Replaying")
             LED_flash(counter)
             replay = False
 
