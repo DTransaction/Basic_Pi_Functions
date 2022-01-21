@@ -15,7 +15,6 @@ pins = [16, 27] # Initializes the GPIO pin of the LED
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(pins[0], GPIO.OUT)
 GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setwarnings(False)
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
@@ -30,14 +29,14 @@ def LED_on(): GPIO.output(pins[0], GPIO.HIGH)
 
 def LED_off(): GPIO.output(pins[0], GPIO.LOW)
 
-def LED_flash(times: int, pause: float):
+def LED_flash(times: int, pause: float) -> None:
     for x in range(times):
         LED_on()
         time.sleep(pause)
         LED_off()
         time.sleep(pause)
 
-def get_temp() -> int:
+def get_temp() -> float:
     with open(device_path + '/w1_slave', 'r') as f:
         temp = int((str(f.readlines()))[76:81])/1000
     return temp
@@ -46,7 +45,7 @@ def email_daily_cat_pic(data: list) -> None:
     sender_email = "dannypyth@gmail.com"
     password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
     receiver_email = "danny613tran@gmail.com"
-    subject = f"Sensor is now {data[2]}\u2103, within ({data[0]}\u2103, {data[1]}\u2103)"
+    subject = f"Sensor is now {data[2]}\xb0C, within ({data[0]}\xb0C, {data[1]}\xb0C)"
     URL = "https://catoftheday.com/"
     FOLDER_PATH = "/home/pi/Pictures/"
 
@@ -105,34 +104,31 @@ def find_temp_range(temp_range: list) -> None:
 
 # Main script
 print("Begin")
-try:
-    while True: 
-        complete = False
-        while not complete: 
-            began = False
-            counter = 0
-            while GPIO.input(pins[1]) == GPIO.HIGH:
-                began = True
-                counter += 1
-                print(counter)
-                LED_flash(1, 0.3)
-            start_time = time.time()
-            replay = True
-            while GPIO.input(pins[1]) == GPIO.LOW and began:
-                end_time = time.time()
-                time_elapsed = end_time - start_time
-                if time_elapsed >= 10:
-                    print("Setting range in 30 seconds. Place temperature sensor in the stuff")
-                    # time.sleep(30)
-                    find_temp_range([counter * 10 - 3, counter * 10 + 3])
-                    complete = True
-                    break
-                elif time_elapsed >= 3 and replay:
-                    print("Replaying")
-                    LED_flash(counter, 0.2)
-                    replay = False
-except Exception as e:
-    print(e)
-    LED_off
-    GPIO.cleanup()
-    print("Done")
+while True: 
+    try:
+        began = False
+        counter = 0
+        while GPIO.input(pins[1]) == GPIO.HIGH:
+            began = True
+            counter += 1
+            print(counter)
+            LED_flash(1, 0.3)
+        start_time = time.time()
+        replay = True
+        while GPIO.input(pins[1]) == GPIO.LOW and began:
+            end_time = time.time()
+            time_elapsed = end_time - start_time
+            if time_elapsed >= 10:
+                print("Setting range in 30 seconds. Place temperature sensor in the stuff")
+                # time.sleep(30)
+                find_temp_range([counter * 10 - 3, counter * 10 + 3])
+                break
+            elif time_elapsed >= 3 and replay:
+                print("Replaying")
+                LED_flash(counter, 0.2)
+                replay = False
+    except Exception as e:
+        print(f"{e}\nDone")
+        LED_off
+        GPIO.cleanup()
+        break
