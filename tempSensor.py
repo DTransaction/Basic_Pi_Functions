@@ -9,6 +9,7 @@ import requests
 import shutil
 
 
+
 # General Setup
 pins = [16] # Initializes the GPIO pin of the LED
 GPIO.setmode(GPIO.BCM)
@@ -42,34 +43,6 @@ def repeated_get_temp():
             time.sleep(1) 
     except: 
         LED_off()
-
-def find_temp_range(temp_range: list) -> None:
-    """
-    Flashes LED when temperature gets between provided range (list with two int 
-    elements), and is solid when within 5 degrees celcius of the limits
-    """
-    lower, upper = temp_range[0], temp_range[1]
-    soft_lower, soft_upper = lower - 5, upper + 5
-    outside_range = True
-
-    while outside_range:
-        temp = get_temp()
-        if lower <= temp <= upper:
-            print(f"{temp} C   READY")
-            outside_range = send_daily_cat_pic()
-            for x in range(50):
-                time.sleep(0.25)
-                LED_on()
-                time.sleep(0.25)
-                LED_off()
-        elif temp >= soft_lower and temp <= soft_upper:
-            LED_on()
-            print(f"{temp} C   ALMOST")
-            time.sleep(2)
-        elif GPIO.input(16) == 1:
-            print(temp)
-            LED_off()
-            time.sleep(2)
 
 def send_daily_cat_pic(): 
     sender_email = "dannypyth@gmail.com"
@@ -105,7 +78,37 @@ def send_daily_cat_pic():
         file_path = FOLDER_PATH + file_name
         os.remove(file_path)
 
-    return False
+    return True
+
+def find_temp_range(temp_range: list) -> None:
+    """
+    Flashes LED when temperature gets between provided range (list with two int 
+    elements), and is solid when within 5 degrees celcius of the limits
+    """
+    lower, upper = temp_range[0], temp_range[1]
+    soft_lower, soft_upper = lower - 5, upper + 5
+    inside_range = False
+
+    while not inside_range:
+        temp = get_temp()
+        if lower <= temp <= upper:
+            print(f"{temp} C   READY")
+            inside_range = send_daily_cat_pic()
+            for x in range(50):
+                time.sleep(0.25)
+                LED_on()
+                time.sleep(0.25)
+                LED_off()
+        elif temp >= soft_lower and temp <= soft_upper:
+            LED_on()
+            print(f"{temp} C   ALMOST")
+            time.sleep(2)
+        elif GPIO.input(16) == 1:
+            print(temp)
+            LED_off()
+            time.sleep(2)
+
+
 
 # Main script
 COFFEE = [60, 70]  # Constant temperature ranges
