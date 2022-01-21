@@ -129,12 +129,12 @@ began = False
 print("Begin")
 
 while not complete: 
-    while GPIO.input(pins[0]) == GPIO.HIGH:
+    while GPIO.input(pins[1]) == GPIO.HIGH:
         LED_flash(1)
         counter += 1
         began = True
     start_time = time.time()
-    while GPIO.input(pins[0]) == GPIO.LOW and began == True:
+    while GPIO.input(pins[1]) == GPIO.LOW and began == True:
         end_time = time.time()
         time_elapsed = end_time - start_time
         if time_elapsed >= 10:
