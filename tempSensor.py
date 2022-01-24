@@ -44,7 +44,7 @@ def get_temp() -> float:
 def email_daily_cat_pic(data: list) -> None: 
     sender_email = "dannypyth@gmail.com"
     password = "ozH{CG)MJarqF2|>m(oQl{(t9ifaf~"
-    receiver_email = "danny613tran@gmail.com"
+    receiver_email = "mt1337@gmail.com"
     subject = f"Sensor is now {data[2]}\xb0C, within ({data[0]}\xb0C, {data[1]}\xb0C)"
     URL = "https://catoftheday.com/"
     FOLDER_PATH = "/home/pi/Pictures/"
@@ -70,7 +70,7 @@ def email_daily_cat_pic(data: list) -> None:
         to=receiver_email,
         subject=subject,
         contents=yagmail.inline(file_location))
-    
+
     for file_name in os.listdir(FOLDER_PATH):
         file_path = FOLDER_PATH + file_name
         os.remove(file_path)
@@ -119,9 +119,13 @@ while True:
             end_time = time.time()
             time_elapsed = end_time - start_time
             if time_elapsed >= 10:
-                print("Setting range in 30 seconds. Place temperature sensor in the stuff")
+                lower_limit = counter * 10 - 3
+                upper_limit = counter * 10 - 3
+                print(f"Range is set to ({lower_limit}\xb0C, {upper_limit}\xb0C)\n"
+                       "Starting in 30 seconds\n"
+                       "Place temperature sensor in the stuff\n")
                 # time.sleep(30)
-                find_temp_range([counter * 10 - 3, counter * 10 + 3])
+                find_temp_range([lower_limit, upper_limit])
                 break
             elif time_elapsed >= 3 and replay:
                 print("Replaying")
