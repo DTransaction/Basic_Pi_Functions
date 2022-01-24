@@ -86,7 +86,7 @@ def find_temp_range(temp_range: list) -> None:
 
     while not inside_range:
         temp = get_temp()
-        if lower <= temp <= upper:
+        if lower <= temp and temp <= upper:
             print(f"{temp} C   READY")
             email_daily_cat_pic(temp_range + [temp])
             LED_flash(50, 0.25)
