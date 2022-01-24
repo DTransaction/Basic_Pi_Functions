@@ -120,7 +120,7 @@ while True:
             time_elapsed = end_time - start_time
             if time_elapsed >= 10:
                 lower_limit = counter * 10 - 3
-                upper_limit = counter * 10 - 3
+                upper_limit = counter * 10 + 3
                 print(f"Range is set to ({lower_limit}\xb0C, {upper_limit}\xb0C)\n"
                        "Starting in 30 seconds\n"
                        "Place temperature sensor in the stuff\n")
