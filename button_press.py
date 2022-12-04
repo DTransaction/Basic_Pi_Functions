@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 #General Setup
 def button_callback(channel):
     print(count)
+    count += 1
 
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 pin = [8]
