@@ -13,8 +13,7 @@ count = 0
 GPIO.setwarnings(False)
 GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set to be an input pin and set initial value to be pulled low (off)
 
-GPIO.add_event_detect(pin, GPIO.RISING)
-GPIO.add_event_callback(pin, button_callback)
+GPIO.add_event_detect(pin, GPIO.RISING, callback = button_callback, bouncetime = 150)
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 
