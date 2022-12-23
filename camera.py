@@ -3,5 +3,5 @@ import time
 
 camera = PiCamera()
 
-location = "/home/dannypi/" + time.ctime(time.time() - 18000) + ".jpg"
+location = "/home/dannypi/" + time.ctime(time.time()) + ".jpg"
 camera.capture(location)
