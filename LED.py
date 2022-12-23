@@ -6,7 +6,7 @@ pauseTime = 0.5
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(pins[0],GPIO.OUT)
 
-for x in range(20):
+for x in range(10):
 	print("LED on")
 	GPIO.output(pins[0],GPIO.HIGH)
 	time.sleep(pauseTime)
