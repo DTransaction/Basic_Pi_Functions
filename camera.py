@@ -3,4 +3,4 @@ import time
 
 camera = PiCamera()
 
-camera.capture('/home/dannypi/image2.jpg')
+camera.capture('/home/dannypi/image 1.jpg')
