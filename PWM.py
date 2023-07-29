@@ -4,12 +4,12 @@ import RPi.GPIO as GPIO
 print("Setup") #informs user setup has begun
 
 #General Setup
-pins = [18]
+pin = 14
 GPIO.setmode(GPIO.BCM) #sets how we reference GPIO pins
-GPIO.setup(pins, GPIO.OUT) #sets GPIO pin 23 as an output
+GPIO.setup(pin, GPIO.OUT) #sets GPIO pin as an output
 
 #PWM Signal Setup
-pin = GPIO.PWM(pins[0],50) #set pin 23 as a PWM output, with a frequency of 50 Hz
+pin = GPIO.PWM(pin, 50) #set pin as a PWM output, with a frequency of 50 Hz
 pin.start(0) #sets the starting duty cycle of the PWM signal to 0% and initializes the signal
 time.sleep(1) #sleep for a second to ensure signal is initialized properly
 
